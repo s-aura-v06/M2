@@ -1,0 +1,107 @@
+PRACTICAL NO. 17 CONTINUOUS INTEGRATION USING JENKINS
+
+AIM: To perform Continuous Integration using Jenkins with Selenium
+WebDriver.
+
+TOOLS: Jenkins, Selenium WebDriver, Eclipse IDE, Java, TestNG.
+
+  ------------------------------------------------------------
+  STEP 1: CREATE JAVA PROJECT
+  ------------------------------------------------------------
+  1. Open Eclipse IDE. 2. Click File -> New -> Java Project.
+  3. Enter Project Name: SeleniumTest 4. Click Finish.
+
+  ------------------------------------------------------------
+
+STEP 2: CREATE PACKAGE
+
+1.  In Project Explorer, expand the project.
+2.  Right-click on src.
+3.  Select New -> Package.
+4.  Enter Package Name: seleniumtest
+5.  Click Finish.
+
+  ------------------------------------------------------------
+  STEP 3: ADD REQUIRED LIBRARIES
+  ------------------------------------------------------------
+  1. Right-click on the project. 2. Select Build Path ->
+  Configure Build Path. 3. Open the Libraries tab. 4. Click
+  Add External JARs. 5. Select the required Selenium and
+  TestNG JAR files. 6. Click Apply and Close.
+
+  ------------------------------------------------------------
+
+STEP 4: CREATE JAVA CLASS
+
+1.  Right-click on the seleniumtest package.
+2.  Select New -> Class.
+3.  Enter Class Name: GoogleTset
+4.  Click Finish.
+5.  Paste the following code and save the file.
+
+FILE: GoogleTset.java
+
+package seleniumtest;
+
+import org.openqa.selenium.WebDriver; import
+org.openqa.selenium.chrome.ChromeDriver; import org.testng.Assert;
+import org.testng.annotations.BeforeMethod; import
+org.testng.annotations.Test;
+
+public class GoogleTset {
+
+    WebDriver driver;
+
+    @BeforeMethod
+    public void setUp() {
+        driver = new ChromeDriver();
+        driver.manage().window().maximize();
+    }
+
+    @Test
+    public void googleTest() {
+
+        driver.get("https://www.google.com");
+
+        String title = driver.getTitle();
+
+        System.out.println("Title: " + title);
+
+        Assert.assertTrue(
+            title.contains("Google"),
+            "Title does not contain Google"
+        );
+
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+}
+
+  ------------------------------------------------------------
+  STEP 5: CREATE testng.xml FILE
+  ------------------------------------------------------------
+  1. Right-click on the project in Eclipse. 2. Select New ->
+  File. 3. Enter File Name: testng.xml 4. Click Finish. 5.
+  Paste the following XML code. 6. Press Ctrl + S to save.
+
+  FILE: testng.xml
+
+  ------------------------------------------------------------
+
+STEP 6: EXECUTE TESTNG XML
+
+1.  Find testng.xml in Project Explorer.
+2.  Right-click on testng.xml.
+3.  Select Run As.
+4.  Click TestNG Suite.
+5.  Chrome browser should open.
+6.  Google website should open.
+7.  The program reads the page title and checks whether it contains
+    “Google”.
+8.  The test waits for 10 seconds and then finishes.
+9.  Check the TestNG Results in Eclipse.
+
