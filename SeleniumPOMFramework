@@ -1,0 +1,219 @@
+Project Name: SeleniumPOMFramework
+Installed JDK निवड.
+Finish वर क्लिक कर.
+लक्षात ठेव: हा Maven Project नाही. Normal Java Project तयार करायचा आहे.
+Part 2: Selenium JAR Files Add करणे
+Selenium ची Java Client Library ZIP डाउनलोड कर.
+ZIP Extract कर.
+Eclipse मध्ये Project वर Right Click कर.
+Build Path → Configure Build Path.
+Libraries → Classpath.
+Add External JARs वर क्लिक कर.
+Extract केलेल्या Selenium Folder मधील मुख्य Selenium JAR आणि lib Folder मधील सर्व JAR Files Select कर.
+Apply and Close.
+
+utils WebDriver Management
+Part 5: DriverManager.java तयार करणे
+utils वर Right Click.
+New → Class.
+Name: DriverManager
+Finish.
+हा Code टाक.
+
+package utils;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+public class DriverManager {
+
+    private static WebDriver driver;
+
+    public static void createDriver() {
+
+        driver = new ChromeDriver();
+
+        driver.manage().window().maximize();
+    }
+
+    public static WebDriver getDriver() {
+
+        return driver;
+    }
+
+    public static void quitDriver() {
+
+        if (driver != null) {
+
+            driver.quit();
+
+            driver = null;
+        }
+    }
+}
+
+Part 6: BaseTest.java तयार करणे
+base Package वर Right Click.
+New → Class.
+Name: BaseTest
+Finish.
+Code:
+
+package base;
+
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+
+import utils.DriverManager;
+
+public class BaseTest {
+
+    @BeforeMethod
+    public void setUp() {
+
+        DriverManager.createDriver();
+    }
+
+    @AfterMethod
+    public void tearDown() {
+
+        DriverManager.quitDriver();
+    }
+}
+
+Part 7: LoginPage.java तयार करणे
+pages Package वर Right Click.
+New → Class.
+Name: LoginPage
+Finish.
+package pages;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+
+public class LoginPage {
+
+    private WebDriver driver;
+
+    private By username = By.id("username");
+
+    private By password = By.id("password");
+
+    private By loginButton =
+            By.cssSelector("button[type='submit']");
+
+    public LoginPage(WebDriver driver) {
+
+        this.driver = driver;
+    }
+
+    public void enterUsername(String usernameValue) {
+
+        driver.findElement(username).sendKeys(usernameValue);
+    }
+
+    public void enterPassword(String passwordValue) {
+
+        driver.findElement(password).sendKeys(passwordValue);
+    }
+
+    public void clickLogin() {
+
+        driver.findElement(loginButton).click();
+    }
+
+    public void login(String usernameValue, String passwordValue) {
+
+        enterUsername(usernameValue);
+
+        enterPassword(passwordValue);
+
+        clickLogin();
+    }
+}
+
+
+Part 8: HomePage.java तयार करणे
+pages Package वर Right Click.
+New → Class.
+Name: HomePage
+Finish.
+Code:
+
+package pages;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+
+public class HomePage {
+
+    private WebDriver driver;
+
+    private By homeTitle =
+            By.cssSelector("div.example h2");
+
+    public HomePage(WebDriver driver) {
+
+        this.driver = driver;
+    }
+
+    public String getHomeTitle() {
+
+        return driver.findElement(homeTitle).getText();
+    }
+}
+
+Part 9: LoginTest.java तयार करणे
+tests Package वर Right Click.
+New → Class.
+Name: LoginTest
+Finish.
+Code:
+
+package tests;
+
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+import base.BaseTest;
+import pages.LoginPage;
+import pages.HomePage;
+import utils.DriverManager;
+
+public class LoginTest extends BaseTest {
+
+    @Test
+    public void validLoginTest() {
+
+        DriverManager.getDriver().get(
+            "https://the-internet.herokuapp.com/login"
+        );
+
+        LoginPage loginPage =
+                new LoginPage(DriverManager.getDriver());
+
+        loginPage.enterUsername("tomsmith");
+
+        loginPage.enterPassword("SuperSecretPassword!");
+
+        loginPage.clickLogin();
+
+        HomePage homePage =
+                new HomePage(DriverManager.getDriver());
+
+        String title = homePage.getHomeTitle();
+
+        Assert.assertEquals(title, "Secure Area");
+    }
+}
+
+Program Run करणे
+सर्व Java Files Save कर.
+LoginTest.java वर Right Click कर.
+Run As → TestNG Test निवड.
+Chrome Browser Open होईल.
+Login Page Open होईल.
+Username आणि Password Automatically Enter होतील.
+Login होईल.
+Secure Area Heading Validate होईल.
+TestNG मध्ये PASSED दिसेल.
