@@ -1,0 +1,189 @@
+maven project
+Group Id com.selenium
+Artifact Id TestNG-Selenium
+
+pom.xml
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+ https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.selenium</groupId>
+    <artifactId>TestNG-Selenium</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>4.27.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>7.10.2</version>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+</project>
+
+
+TestNG Plugin Install कर
+Eclipse च्या Help Menu वर Click कर.
+Eclipse Marketplace निवड.
+Search Box मध्ये TestNG for Eclipse लिही.
+Go वर Click कर.
+TestNG Plugin च्या बाजूला Install वर Click कर.
+Installation पूर्ण कर.
+विचारल्यास Restart Now निवड.
+
+src/test/java शोध.
+त्यावर Right Click कर.
+New वर Click कर.
+Package निवड.
+Name मध्ये लिही:prct16
+6. Finish वर Click कर.
+
+तयार केलेल्या prct16 Package वर Right Click कर.
+New निवड.
+Class वर Click कर.
+Name मध्ये लिही:TestCases
+package prct16;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+public class TestCases {
+
+    WebDriver driver;
+
+    @BeforeMethod
+    public void setUp() {
+        driver = new ChromeDriver();
+        driver.manage().window().maximize();
+        driver.get("https://www.google.com");
+    }
+
+    @Test(priority = 1, groups = {"smoke"})
+    public void verifyTitle() {
+
+        String title = driver.getTitle();
+
+        Assert.assertTrue(
+            title.contains("Google"),
+            "Google title was not found"
+        );
+    }
+
+    @Test(priority = 2, groups = {"search"})
+    public void verifySearch() {
+
+        driver.findElement(By.name("q"))
+              .sendKeys("Selenium WebDriver");
+
+        // Submit the search using the search box
+        driver.findElement(By.name("q"))
+              .submit();
+
+        // Verify search result page title
+        Assert.assertTrue(
+            driver.getTitle().contains("Selenium WebDriver"),
+            "Search result title was not found"
+        );
+    }
+
+    @Test(priority = 3, groups = {"smoke", "search"})
+    public void verifyUrl() {
+
+        String currentUrl = driver.getCurrentUrl();
+
+        Assert.assertTrue(
+            currentUrl.contains("google"),
+            "Google URL was not found"
+        );
+    }
+
+    @AfterMethod
+    public void tearDown() {
+
+        if (driver != null) {
+            driver.quit();
+        }
+    }
+}
+
+testng.xml Creation
+Step 14: XML File तयार कर
+TestNG-Selenium Project वर Right Click कर.
+New वर Click कर.
+File निवड.
+File Name मध्ये लिही:
+5. Finish वर Click कर.
+testng.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+
+<suite name="Selenium Test Suite">
+
+    <test name="Automation Tests">
+
+        <groups>
+            <run>
+                <include name="smoke"/>
+                <include name="search"/>
+            </run>
+        </groups>
+
+        <classes>
+            <class name="prct16.TestCases"/>
+        </classes>
+
+    </test>
+
+</suite>
+
+Project वर Right Click कर.
+Maven → Update Project.
+OK वर Click कर.
+पूर्ण होईपर्यंत थांब.
+
+Project वर Right Click कर.
+Run As वर जा.
+Maven clean निवड.
+
+Console मध्ये BUILD SUCCESS दिसणे अपेक्षित आहे.
+
+testng.xml वर Right Click कर.
+Run As वर जा.
+TestNG Suite वर Click कर.
+
+HTML Report तयार करणे
+Step 21: HTML Report Open कर
+TestNG Suite Execute झाल्यानंतर:
+Project वर Right Click कर.
+Refresh निवड किंवा F5 दाब.
+test-output Folder शोध.
+त्यामध्ये index.html शोध.
+index.html वर Right Click कर.
+Open With → Web Browser निवड.
+
